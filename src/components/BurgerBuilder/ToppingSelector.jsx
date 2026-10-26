@@ -1,16 +1,43 @@
-import QuantityControl from "./QuantityControl";
+import QuantityControl from "./QuantityControl"
 
-const ToppingSelector = ({ topping, quantity, onDecrease, onIncrease }) => (
-  <div className="topping-card">
-    <div className="topping-image">
-      <img src={topping.image} alt={topping.name} />
-    </div>
-    <div className="topping-copy">
-      <strong>{topping.name}</strong>
-      <span>₹{topping.price}</span>
-    </div>
-    <QuantityControl quantity={quantity} onDecrease={onDecrease} onIncrease={onIncrease} />
-  </div>
-);
+const ToppingSelector = ({
+    topping,
+    quantity,
+    onDecrease,
+    onIncrease,
+}) => (
+    <div className="topping-card">
 
-export default ToppingSelector;
+        <div className="topping-image">
+            <img
+                src={topping.image}
+                alt={topping.name}
+            />
+        </div>
+
+
+        <div className="topping-copy">
+
+            <strong>
+                {topping.name}
+            </strong>
+
+            <span>
+                ₹{topping.price}
+            </span>
+
+        </div>
+
+
+        <QuantityControl
+            quantity={quantity}
+            onDecrease={onDecrease}
+            onIncrease={onIncrease}
+            min={0}
+            max={3}
+        />
+
+    </div>
+)
+
+export default ToppingSelector

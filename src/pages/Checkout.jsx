@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001"
 export const Checkout = ({
     cartItems,
     onBack,
     onPaymentSuccess,
 }) => {
-
     const [customer, setCustomer] = useState({
         name: "",
         phone: "",
@@ -17,23 +17,44 @@ export const Checkout = ({
 
     const [isProcessing, setIsProcessing] = useState(false)
     const [error, setError] = useState("")
+    const [razorpayLoaded, setRazorpayLoaded] = useState(
+        !!window.Razorpay
+    )
 
+    // =========================
+    // TOTAL
+    // =========================
 
     const total = cartItems.reduce(
         (sum, item) =>
             sum +
-            item.total *
-            (item.quantity || 1),
+            item.total * (item.quantity || 1),
         0
     )
 
+
+    // =========================
+    // LOAD RAZORPAY
+    // =========================
+
     useEffect(() => {
+        if (window.Razorpay) {
+            setRazorpayLoaded(true)
+            return
+        }
 
         const existingScript = document.querySelector(
             'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
         )
 
-        if (existingScript) return
+        if (existingScript) {
+            existingScript.addEventListener(
+                "load",
+                () => setRazorpayLoaded(true)
+            )
+
+            return
+        }
 
         const script = document.createElement("script")
 
@@ -42,67 +63,144 @@ export const Checkout = ({
 
         script.async = true
 
+        script.onload = () => {
+            setRazorpayLoaded(true)
+        }
+
+        script.onerror = () => {
+            setError(
+                "Payment system could not load. Please refresh and try again."
+            )
+        }
+
         document.body.appendChild(script)
 
+        return () => {
+            script.onload = null
+            script.onerror = null
+        }
     }, [])
 
 
-    const handleChange = (e) => {
+    // =========================
+    // INPUT CHANGE
+    // =========================
 
+    const handleChange = (e) => {
         const { name, value } = e.target
 
-        setCustomer(prev => ({
+        setCustomer((prev) => ({
             ...prev,
             [name]: value,
         }))
+
+        // Remove error as soon as user starts correcting form
+        if (error) {
+            setError("")
+        }
     }
 
 
+    // =========================
+    // FORM VALIDATION
+    // =========================
+
     const validateForm = () => {
+        const {
+            name,
+            phone,
+            email,
+            address,
+            city,
+            pinCode,
+        } = customer
 
         if (
-            !customer.name ||
-            !customer.phone ||
-            !customer.email ||
-            !customer.address ||
-            !customer.city ||
-            !customer.pinCode
+            !name.trim() ||
+            !phone.trim() ||
+            !email.trim() ||
+            !address.trim() ||
+            !city.trim() ||
+            !pinCode.trim()
         ) {
-            setError("Please fill in all delivery details.")
+            setError(
+                "Please fill in all delivery details."
+            )
+
+            return false
+        }
+
+        const phoneRegex = /^[6-9]\d{9}$/
+
+        if (!phoneRegex.test(phone.trim())) {
+            setError(
+                "Please enter a valid 10-digit Indian phone number."
+            )
+
+            return false
+        }
+
+        const emailRegex =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+        if (!emailRegex.test(email.trim())) {
+            setError(
+                "Please enter a valid email address."
+            )
+
+            return false
+        }
+
+        const pinRegex = /^\d{6}$/
+
+        if (!pinRegex.test(pinCode.trim())) {
+            setError(
+                "Please enter a valid 6-digit PIN code."
+            )
+
             return false
         }
 
         setError("")
+
         return true
     }
 
 
+    // =========================
+    // PAYMENT
+    // =========================
+
     const handlePayment = async () => {
+        if (isProcessing) return
 
         if (!validateForm()) return
 
-        if (!window.Razorpay) {
+        if (!razorpayLoaded || !window.Razorpay) {
             setError(
-                "Payment system could not load. Please refresh and try again."
+                "Payment system is still loading. Please try again in a moment."
             )
+
             return
         }
 
         try {
-
             setIsProcessing(true)
             setError("")
 
 
-            // 1. CREATE ORDER ON BACKEND
+            // =========================
+            // 1. CREATE ORDER
+            // =========================
 
             const orderResponse = await fetch(
-                "http://localhost:5001/api/payment/create-order",
+                `${API_URL}/api/payment/create-order`,
                 {
                     method: "POST",
 
                     headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type":
+                            "application/json",
                     },
 
                     body: JSON.stringify({
@@ -113,18 +211,24 @@ export const Checkout = ({
 
 
             if (!orderResponse.ok) {
-                throw new Error("Could not create payment order")
+                throw new Error(
+                    "Could not create payment order"
+                )
             }
 
 
-            const order = await orderResponse.json()
+            const order =
+                await orderResponse.json()
 
 
-            // 2. RAZORPAY CHECKOUT OPTIONS
+            // =========================
+            // 2. RAZORPAY OPTIONS
+            // =========================
 
             const options = {
-
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                key:
+                    import.meta.env
+                        .VITE_RAZORPAY_KEY_ID,
 
                 amount: order.amount,
 
@@ -132,48 +236,56 @@ export const Checkout = ({
 
                 name: "BurgerLab",
 
-                description: `${cartItems.length} Custom Burger${cartItems.length > 1 ? "s" : ""
+                description:
+                    `${cartItems.length} Custom Burger${cartItems.length > 1
+                        ? "s"
+                        : ""
                     }`,
 
                 order_id: order.id,
 
 
-                // 3. RUNS AFTER PAYMENT
+                // =========================
+                // PAYMENT SUCCESS
+                // =========================
 
-                handler: async function (response) {
-
+                handler: async function (
+                    response
+                ) {
                     try {
+                        const verifyResponse =
+                            await fetch(
+                                `${API_URL}/api/payment/verify`,
+                                {
+                                    method: "POST",
 
-                        const verifyResponse = await fetch(
-                            "http://localhost:5001/api/payment/verify",
-                            {
-                                method: "POST",
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+                                    },
 
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
-                                },
+                                    body: JSON.stringify({
+                                        razorpay_order_id:
+                                            response.razorpay_order_id,
 
-                                body: JSON.stringify({
-                                    razorpay_order_id:
-                                        response.razorpay_order_id,
+                                        razorpay_payment_id:
+                                            response.razorpay_payment_id,
 
-                                    razorpay_payment_id:
-                                        response.razorpay_payment_id,
-
-                                    razorpay_signature:
-                                        response.razorpay_signature,
-                                }),
-                            }
-                        )
+                                        razorpay_signature:
+                                            response.razorpay_signature,
+                                    }),
+                                }
+                            )
 
 
                         const verification =
                             await verifyResponse.json()
 
 
-                        if (!verification.verified) {
-
+                        if (
+                            !verifyResponse.ok ||
+                            !verification.verified
+                        ) {
                             setError(
                                 "Payment verification failed."
                             )
@@ -184,7 +296,9 @@ export const Checkout = ({
                         }
 
 
-                        // PAYMENT VERIFIED 🎉
+                        // =========================
+                        // PAYMENT VERIFIED
+                        // =========================
 
                         onPaymentSuccess({
                             paymentId:
@@ -195,12 +309,24 @@ export const Checkout = ({
 
                             total,
 
-                            customer,
+                            customer: {
+                                ...customer,
+                                name: customer.name.trim(),
+                                phone:
+                                    customer.phone.trim(),
+                                email:
+                                    customer.email.trim(),
+                                address:
+                                    customer.address.trim(),
+                                city:
+                                    customer.city.trim(),
+                                pinCode:
+                                    customer.pinCode.trim(),
+                            },
                         })
 
 
                     } catch (error) {
-
                         console.error(error)
 
                         setError(
@@ -212,22 +338,20 @@ export const Checkout = ({
                 },
 
 
+                // =========================
+                // PREFILL
+                // =========================
+
                 prefill: {
-
                     name: customer.name,
-
                     email: customer.email,
-
                     contact: customer.phone,
                 },
 
 
                 notes: {
-
                     address: customer.address,
-
                     city: customer.city,
-
                     pinCode: customer.pinCode,
                 },
 
@@ -237,8 +361,11 @@ export const Checkout = ({
                 },
 
 
-                modal: {
+                // =========================
+                // CLOSE CHECKOUT
+                // =========================
 
+                modal: {
                     ondismiss: function () {
                         setIsProcessing(false)
                     },
@@ -246,20 +373,24 @@ export const Checkout = ({
             }
 
 
-            // 4. OPEN RAZORPAY
+            // =========================
+            // 3. OPEN RAZORPAY
+            // =========================
 
-            const razorpay = new window.Razorpay(options)
+            const razorpay =
+                new window.Razorpay(options)
+
 
             razorpay.on(
                 "payment.failed",
                 function (response) {
-
                     console.error(
                         response.error
                     )
 
                     setError(
-                        response.error.description ||
+                        response.error
+                            ?.description ||
                         "Payment failed. Please try again."
                     )
 
@@ -270,9 +401,7 @@ export const Checkout = ({
 
             razorpay.open()
 
-
         } catch (error) {
-
             console.error(error)
 
             setError(
@@ -284,23 +413,37 @@ export const Checkout = ({
     }
 
 
-    return (
+    // =========================
+    // RENDER
+    // =========================
 
+    return (
         <main className="checkout-page">
 
             <div className="checkout-container">
 
+                {/* BACK */}
+
                 <button
                     className="checkout-back"
                     onClick={onBack}
+                    disabled={isProcessing}
                 >
                     ← Back to Cart
                 </button>
 
 
+                {/* HEADER */}
+
                 <div className="checkout-heading">
 
-                    <h1>Checkout</h1>
+                    <p className="checkout-eyebrow">
+                        BURGERLAB
+                    </p>
+
+                    <h1>
+                        Checkout
+                    </h1>
 
                     <p>
                         One step closer to eating your
@@ -312,19 +455,26 @@ export const Checkout = ({
 
                 <div className="checkout-layout">
 
-
-                    {/* DELIVERY DETAILS */}
+                    {/* =========================
+                        DELIVERY DETAILS
+                    ========================= */}
 
                     <section className="checkout-card">
 
-                        <h2>Delivery Details</h2>
+                        <h2>
+                            Delivery Details
+                        </h2>
+
+                        <p className="checkout-card-subtitle">
+                            Where should we send your burger?
+                        </p>
 
 
                         <div className="checkout-form">
 
+                            {/* NAME */}
 
                             <label>
-
                                 Full Name
 
                                 <input
@@ -333,13 +483,15 @@ export const Checkout = ({
                                     value={customer.name}
                                     onChange={handleChange}
                                     placeholder="Your name"
+                                    autoComplete="name"
+                                    disabled={isProcessing}
                                 />
-
                             </label>
 
 
-                            <label>
+                            {/* PHONE */}
 
+                            <label>
                                 Phone
 
                                 <input
@@ -348,13 +500,17 @@ export const Checkout = ({
                                     value={customer.phone}
                                     onChange={handleChange}
                                     placeholder="9876543210"
+                                    inputMode="numeric"
+                                    maxLength="10"
+                                    autoComplete="tel"
+                                    disabled={isProcessing}
                                 />
-
                             </label>
 
 
-                            <label>
+                            {/* EMAIL */}
 
+                            <label>
                                 Email
 
                                 <input
@@ -363,13 +519,15 @@ export const Checkout = ({
                                     value={customer.email}
                                     onChange={handleChange}
                                     placeholder="you@example.com"
+                                    autoComplete="email"
+                                    disabled={isProcessing}
                                 />
-
                             </label>
 
 
-                            <label className="checkout-full">
+                            {/* ADDRESS */}
 
+                            <label className="checkout-full">
                                 Address
 
                                 <textarea
@@ -378,13 +536,15 @@ export const Checkout = ({
                                     onChange={handleChange}
                                     placeholder="House number, street, area"
                                     rows="4"
+                                    autoComplete="street-address"
+                                    disabled={isProcessing}
                                 />
-
                             </label>
 
 
-                            <label>
+                            {/* CITY */}
 
+                            <label>
                                 City
 
                                 <input
@@ -393,13 +553,15 @@ export const Checkout = ({
                                     value={customer.city}
                                     onChange={handleChange}
                                     placeholder="Bengaluru"
+                                    autoComplete="address-level2"
+                                    disabled={isProcessing}
                                 />
-
                             </label>
 
 
-                            <label>
+                            {/* PIN */}
 
+                            <label>
                                 PIN Code
 
                                 <input
@@ -408,8 +570,11 @@ export const Checkout = ({
                                     value={customer.pinCode}
                                     onChange={handleChange}
                                     placeholder="560001"
+                                    inputMode="numeric"
+                                    maxLength="6"
+                                    autoComplete="postal-code"
+                                    disabled={isProcessing}
                                 />
-
                             </label>
 
                         </div>
@@ -417,11 +582,15 @@ export const Checkout = ({
                     </section>
 
 
-                    {/* ORDER SUMMARY */}
+                    {/* =========================
+                        ORDER SUMMARY
+                    ========================= */}
 
                     <aside className="checkout-card checkout-summary">
 
-                        <h2>Your Order</h2>
+                        <h2>
+                            Your Order
+                        </h2>
 
 
                         <div className="checkout-items">
@@ -437,22 +606,28 @@ export const Checkout = ({
                                         <div>
 
                                             <strong>
-                                                Custom Burger {index + 1}
-                                                {item.quantity > 1 &&
+                                                🍔 Custom Burger{" "}
+                                                {index + 1}
+
+                                                {item.quantity >
+                                                    1 &&
                                                     ` × ${item.quantity}`}
                                             </strong>
 
                                             <span>
-                                                {item.rows.length} ingredients
+                                                {item.rows.length}{" "}
+                                                ingredients
                                             </span>
 
                                         </div>
 
 
                                         <strong>
-                                            ₹{(
+                                            ₹
+                                            {(
                                                 item.total *
-                                                (item.quantity || 1)
+                                                (item.quantity ||
+                                                    1)
                                             ).toFixed(2)}
                                         </strong>
 
@@ -463,9 +638,13 @@ export const Checkout = ({
                         </div>
 
 
+                        {/* SUBTOTAL */}
+
                         <div className="checkout-price-row">
 
-                            <span>Subtotal</span>
+                            <span>
+                                Subtotal
+                            </span>
 
                             <span>
                                 ₹{total.toFixed(2)}
@@ -474,18 +653,28 @@ export const Checkout = ({
                         </div>
 
 
+                        {/* DELIVERY */}
+
                         <div className="checkout-price-row">
 
-                            <span>Delivery</span>
+                            <span>
+                                Delivery
+                            </span>
 
-                            <span>FREE</span>
+                            <span>
+                                FREE
+                            </span>
 
                         </div>
 
 
+                        {/* TOTAL */}
+
                         <div className="checkout-total">
 
-                            <span>Total</span>
+                            <span>
+                                Total
+                            </span>
 
                             <strong>
                                 ₹{total.toFixed(2)}
@@ -494,28 +683,36 @@ export const Checkout = ({
                         </div>
 
 
+                        {/* ERROR */}
+
                         {error && (
-
                             <p className="payment-error">
-                                {error}
+                                ⚠️ {error}
                             </p>
-
                         )}
 
+
+                        {/* PAY BUTTON */}
 
                         <button
                             className="checkout-pay-button"
                             onClick={handlePayment}
-                            disabled={isProcessing}
+                            disabled={
+                                isProcessing ||
+                                !razorpayLoaded
+                            }
                         >
 
                             {isProcessing
-                                ? "Processing..."
-                                : `Pay ₹${total.toFixed(2)}`
-                            }
+                                ? "Processing Payment..."
+                                : !razorpayLoaded
+                                    ? "Loading Payment..."
+                                    : `Pay ₹${total.toFixed(2)}`}
 
                         </button>
 
+
+                        {/* SECURITY */}
 
                         <p className="checkout-secure">
                             🔒 Secure payment powered by Razorpay

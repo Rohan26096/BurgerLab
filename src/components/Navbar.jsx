@@ -1,136 +1,220 @@
+import { useState } from "react"
+
 const Navbar = ({
-  cartCount,
-  onCartClick,
-  onOrdersClick,
-  onLoginClick,
-  currentUser,
-  onLogout,
+    cartCount,
+    onCartClick,
+    onOrdersClick,
+    onLoginClick,
+    currentUser,
+    onLogout,
 }) => {
 
-  const handleAboutClick = (e) => {
+    const [showProfileMenu, setShowProfileMenu] =
+        useState(false)
 
-    e.preventDefault()
 
-    const aboutSection =
-      document.getElementById("about")
+    const handleAboutClick = (e) => {
 
-    if (aboutSection) {
+        e.preventDefault()
 
-      aboutSection.scrollIntoView({
-        behavior: "smooth",
-      })
+        const aboutSection =
+            document.getElementById("about")
+
+        if (aboutSection) {
+
+            aboutSection.scrollIntoView({
+                behavior: "smooth",
+            })
+
+        }
 
     }
 
-  }
+
+    const handleOrdersClick = () => {
+
+        setShowProfileMenu(false)
+
+        onOrdersClick()
+
+    }
 
 
-  return (
+    const handleLogout = () => {
 
-    <header className="navbar">
+        setShowProfileMenu(false)
 
-      {/* Logo */}
+        onLogout()
 
-      <a
-        href="#"
-        className="brand"
-      >
-
-        <span className="brand-icon">
-          🍔
-        </span>
-
-        <strong>
-          BurgerLab
-        </strong>
-
-      </a>
+    }
 
 
-      {/* Navigation */}
+    return (
 
-      <nav className="navbar-links">
+        <header className="navbar">
 
-        <a
-          href="#"
-          className="active"
-        >
-          Build Your Burger
-        </a>
+            {/* Logo */}
 
+            <a
+                href="#"
+                className="brand"
+            >
 
-        <a
-          href="#about"
-          onClick={handleAboutClick}
-        >
-          About
-        </a>
+                <span className="brand-icon">
+                    🍔
+                </span>
 
+                <strong>
+                    BurgerLab
+                </strong>
 
-        <button
-          type="button"
-          className="nav-orders"
-          onClick={onOrdersClick}
-        >
-          My Orders
-        </button>
-
-      </nav>
+            </a>
 
 
-      {/* Right side */}
+            {/* Navigation */}
 
-      <div className="nav-actions">
+            <nav className="navbar-links">
 
-        <button
-          type="button"
-          className="nav-cart"
-          onClick={onCartClick}
-          aria-label="Shopping cart"
-        >
-
-          🛒
-
-          {cartCount > 0 && (
-
-            <span>
-              {cartCount}
-            </span>
-
-          )}
-
-        </button>
+                <a
+                    href="#"
+                    className="active"
+                >
+                    Build Your Burger
+                </a>
 
 
-        {/* Login / Logout */}
+                <a
+                    href="#about"
+                    onClick={handleAboutClick}
+                >
+                    About
+                </a>
 
-        {currentUser ? (
 
-          <button
-            type="button"
-            className="login-button"
-            onClick={onLogout}
-          >
-            Logout
-          </button>
+                <button
+                    type="button"
+                    className="nav-orders"
+                    onClick={onOrdersClick}
+                >
+                    My Orders
+                </button>
 
-        ) : (
+            </nav>
 
-          <button
-            type="button"
-            className="login-button"
-            onClick={onLoginClick}
-          >
-            Login
-          </button>
 
-        )}
+            {/* Right side */}
 
-      </div>
+            <div className="nav-actions">
 
-    </header>
+                {/* Cart */}
 
-  )
+                <button
+                    type="button"
+                    className="nav-cart"
+                    onClick={onCartClick}
+                    aria-label="Shopping cart"
+                >
+
+                    🛒
+
+                    {cartCount > 0 && (
+
+                        <span>
+                            {cartCount}
+                        </span>
+
+                    )}
+
+                </button>
+
+
+                {/* Account */}
+
+                {currentUser ? (
+
+                    <div className="profile-wrapper">
+
+                        <button
+                            type="button"
+                            className="profile-button"
+                            onClick={() =>
+                                setShowProfileMenu(
+                                    (current) => !current
+                                )
+                            }
+                        >
+
+                            <span className="profile-name">
+                                {currentUser.name}
+                            </span>
+
+                            <span className="profile-arrow">
+                                ▾
+                            </span>
+
+                        </button>
+
+
+                        {showProfileMenu && (
+
+                            <div className="profile-menu">
+
+                                <div className="profile-menu-header">
+
+                                    <strong>
+                                        {currentUser.name}
+                                    </strong>
+
+                                    <span>
+                                        {currentUser.email}
+                                    </span>
+
+                                </div>
+
+
+                                <div className="profile-menu-divider" />
+
+
+                                <button
+                                    type="button"
+                                    onClick={handleOrdersClick}
+                                >
+                                    <span>📦</span>
+                                    My Orders
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    onClick={handleLogout}
+                                >
+                                    <span>🚪</span>
+                                    Logout
+                                </button>
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                ) : (
+
+                    <button
+                        type="button"
+                        className="login-button"
+                        onClick={onLoginClick}
+                    >
+                        Login
+                    </button>
+
+                )}
+
+            </div>
+
+        </header>
+
+    )
 
 }
 

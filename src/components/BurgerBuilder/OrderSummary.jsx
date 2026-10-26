@@ -5,7 +5,7 @@ import {
   cheeses,
   toppings,
   sauces,
-} from "../../data/ingredients";
+} from "../../data/ingredients"
 
 const OrderSummary = ({
   burger,
@@ -14,19 +14,24 @@ const OrderSummary = ({
 }) => {
 
   const selectedBun =
-    buns[burger.bunIndex];
+    buns[burger.bunIndex]
 
   const selectedBottomBun =
-    bottomBuns[burger.bottomBunIndex];
+    bottomBuns[burger.bottomBunIndex]
 
   const selectedPatty =
-    patties[burger.pattyIndex];
+    patties[burger.pattyIndex]
 
   const selectedCheese =
-    cheeses[burger.cheeseIndex];
+    cheeses[burger.cheeseIndex]
 
   const selectedSauce =
-    sauces[burger.sauceIndex];
+    sauces[burger.sauceIndex]
+
+
+  // =========================
+  // BUILD ORDER ROWS
+  // =========================
 
   const rows = [
     {
@@ -36,110 +41,59 @@ const OrderSummary = ({
       image: selectedBun.image,
     },
 
-    ...(
-      burger.toppings.Lettuce
-        ? [{
-          name: "Lettuce",
-          quantity: burger.toppings.Lettuce,
-          price: 10 * burger.toppings.Lettuce,
-          image: toppings[0].image,
-        }]
-        : []
-    ),
+    ...toppings
+      .filter(
+        (topping) =>
+          burger.toppings[topping.name] > 0
+      )
+      .map((topping) => ({
+        name: topping.name,
+        quantity:
+          burger.toppings[topping.name],
+        price:
+          topping.price *
+          burger.toppings[topping.name],
+        image: topping.image,
+      })),
 
-    ...(
-      burger.toppings.Tomato
-        ? [{
-          name: "Tomato",
-          quantity: burger.toppings.Tomato,
-          price: 10 * burger.toppings.Tomato,
-          image: toppings[1].image,
-        }]
-        : []
-    ),
+    ...(burger.cheeseQuantity > 0
+      ? [
+          {
+            name: selectedCheese.name,
+            quantity: burger.cheeseQuantity,
+            price:
+              selectedCheese.price *
+              burger.cheeseQuantity,
+            image: selectedCheese.image,
+          },
+        ]
+      : []),
 
-    ...(
-      burger.toppings.Onion
-        ? [{
-          name: "Onion",
-          quantity: burger.toppings.Onion,
-          price: 10 * burger.toppings.Onion,
-          image: toppings[2].image,
-        }]
-        : []
-    ),
+    ...(burger.pattyQuantity > 0
+      ? [
+          {
+            name: selectedPatty.name,
+            quantity: burger.pattyQuantity,
+            price:
+              selectedPatty.price *
+              burger.pattyQuantity,
+            image: selectedPatty.image,
+          },
+        ]
+      : []),
 
-    ...(
-      burger.toppings.Pickles
-        ? [{
-          name: "Pickles",
-          quantity: burger.toppings.Pickles,
-          price: 10 * burger.toppings.Pickles,
-          image: toppings[3].image,
-        }]
-        : []
-    ),
-
-    ...(
-      burger.toppings.Jalapeño
-        ? [{
-          name: "Jalapeño",
-          quantity: burger.toppings.Jalapeño,
-          price: 15 * burger.toppings.Jalapeño,
-          image: toppings[4].image,
-        }]
-        : []
-    ),
-
-    ...(
-      burger.toppings.Bacon
-        ? [{
-          name: "Bacon",
-          quantity: burger.toppings.Bacon,
-          price: 30 * burger.toppings.Bacon,
-          image: toppings[5].image,
-        }]
-        : []
-    ),
-
-    ...(
-      burger.cheeseQuantity
-        ? [{
-          name: selectedCheese.name,
-          quantity: burger.cheeseQuantity,
-          price:
-            selectedCheese.price *
-            burger.cheeseQuantity,
-          image: selectedCheese.image,
-        }]
-        : []
-    ),
-
-    ...(
-      burger.pattyQuantity
-        ? [{
-          name: selectedPatty.name,
-          quantity: burger.pattyQuantity,
-          price:
-            selectedPatty.price *
-            burger.pattyQuantity,
-          image: selectedPatty.image,
-        }]
-        : []
-    ),
-
-    ...(
-      burger.sauceQuantity
-        ? [{
-          name: selectedSauce.name,
-          quantity: burger.sauceQuantity,
-          price:
-            selectedSauce.price *
-            burger.sauceQuantity,
-          image: selectedSauce.image,
-        }]
-        : []
-    ),
+    ...(burger.sauceQuantity > 0
+      ? [
+          {
+            name: selectedSauce.name,
+            quantity: burger.sauceQuantity,
+            price:
+              selectedSauce.price *
+              burger.sauceQuantity,
+            image: selectedSauce.image,
+          },
+        ]
+      : []),
 
     {
       name: `${selectedBottomBun.name} (Bottom)`,
@@ -147,100 +101,199 @@ const OrderSummary = ({
       price: selectedBottomBun.price,
       image: selectedBottomBun.image,
     },
-  ];
+  ]
+
+
+  // =========================
+  // TOTAL
+  // =========================
 
   const total = rows.reduce(
-    (sum, row) => sum + row.price,
+    (sum, row) =>
+      sum + row.price,
     0
-  );
+  )
 
-  const toppingCalories =
+
+  // =========================
+  // NUTRITION
+  // =========================
+
+  const toppingNutrition =
     toppings.reduce(
-      (sum, topping) =>
-        sum +
-        topping.calories *
-        burger.toppings[topping.name],
-      0
-    );
+      (nutrition, topping) => {
 
-  const sauceCalories =
-    selectedSauce.calories *
-    burger.sauceQuantity;
+        const quantity =
+          burger.toppings[topping.name] || 0
+
+        return {
+          calories:
+            nutrition.calories +
+            (topping.calories || 0) *
+              quantity,
+
+          protein:
+            nutrition.protein +
+            (topping.protein || 0) *
+              quantity,
+
+          carbs:
+            nutrition.carbs +
+            (topping.carbs || 0) *
+              quantity,
+
+          fats:
+            nutrition.fats +
+            (topping.fats || 0) *
+              quantity,
+        }
+      },
+      {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fats: 0,
+      }
+    )
+
 
   const calories = Math.round(
-    selectedBun.calories +
-    selectedBottomBun.calories +
-    selectedPatty.calories *
-    burger.pattyQuantity +
-    selectedCheese.calories *
-    burger.cheeseQuantity +
-    toppingCalories +
-    sauceCalories
-  );
+    (selectedBun.calories || 0) +
+    (selectedBottomBun.calories || 0) +
+    (selectedPatty.calories || 0) *
+      burger.pattyQuantity +
+    (selectedCheese.calories || 0) *
+      burger.cheeseQuantity +
+    (selectedSauce.calories || 0) *
+      burger.sauceQuantity +
+    toppingNutrition.calories
+  )
+
 
   const protein = Math.round(
-    5 +
-    selectedPatty.protein *
-    burger.pattyQuantity +
-    selectedCheese.protein *
-    burger.cheeseQuantity
-  );
+    (selectedBun.protein || 0) +
+    (selectedBottomBun.protein || 0) +
+    (selectedPatty.protein || 0) *
+      burger.pattyQuantity +
+    (selectedCheese.protein || 0) *
+      burger.cheeseQuantity +
+    (selectedSauce.protein || 0) *
+      burger.sauceQuantity +
+    toppingNutrition.protein
+  )
+
 
   const carbs = Math.round(
-    30 +
-    selectedPatty.carbs *
-    burger.pattyQuantity +
-    selectedCheese.carbs *
-    burger.cheeseQuantity
-  );
+    (selectedBun.carbs || 0) +
+    (selectedBottomBun.carbs || 0) +
+    (selectedPatty.carbs || 0) *
+      burger.pattyQuantity +
+    (selectedCheese.carbs || 0) *
+      burger.cheeseQuantity +
+    (selectedSauce.carbs || 0) *
+      burger.sauceQuantity +
+    toppingNutrition.carbs
+  )
+
 
   const fats = Math.round(
-    10 +
-    selectedPatty.fats *
-    burger.pattyQuantity +
-    selectedCheese.fats *
-    burger.cheeseQuantity
-  );
+    (selectedBun.fats || 0) +
+    (selectedBottomBun.fats || 0) +
+    (selectedPatty.fats || 0) *
+      burger.pattyQuantity +
+    (selectedCheese.fats || 0) *
+      burger.cheeseQuantity +
+    (selectedSauce.fats || 0) *
+      burger.sauceQuantity +
+    toppingNutrition.fats
+  )
+
+
+  // =========================
+  // INGREDIENT COUNT
+  // =========================
+
+  const ingredientCount =
+    rows.reduce(
+      (count, row) =>
+        count + row.quantity,
+      0
+    )
+
+
+  // =========================
+  // ADD TO CART
+  // =========================
 
   const handleAddToCart = () => {
+
     onAddToCart({
-      burger: { ...burger },
+      burger: {
+        ...burger,
+
+        toppings: {
+          ...burger.toppings,
+        },
+      },
+
       rows: [...rows],
+
       total,
-    });
-  };
+    })
+  }
+
 
   return (
     <section className="order-panel">
 
+      {/* =========================
+          HEADER
+      ========================= */}
+
       <div className="order-heading">
 
-        <h2>Your Order</h2>
+        <div>
+          <h2>
+            Your Order
+          </h2>
+
+          <span className="order-count">
+            {ingredientCount} ingredients
+          </span>
+        </div>
 
         <button
           type="button"
           onClick={onClear}
         >
-          ♜ &nbsp; Clear All
+          ↻ &nbsp; Clear All
         </button>
 
       </div>
 
+
+      {/* =========================
+          ORDER ITEMS
+      ========================= */}
+
       <div className="order-list">
 
-        {rows.map((row, i) => (
+        {rows.map((row, index) => (
 
           <div
             className="order-row"
-            key={`${row.name}-${i}`}
+            key={`${row.name}-${index}`}
           >
 
             <div className="order-thumb">
+
               <img
                 src={row.image}
                 alt={row.name}
               />
+
             </div>
+
 
             <div className="order-name">
 
@@ -256,6 +309,7 @@ const OrderSummary = ({
 
             </div>
 
+
             <strong>
               ₹{row.price}
             </strong>
@@ -266,10 +320,27 @@ const OrderSummary = ({
 
       </div>
 
+
+      {/* =========================
+          TOTAL
+      ========================= */}
+
       <div className="total-row">
-        <span>Total</span>
-        <strong>₹{total}</strong>
+
+        <span>
+          Total
+        </span>
+
+        <strong>
+          ₹{total}
+        </strong>
+
       </div>
+
+
+      {/* =========================
+          CART
+      ========================= */}
 
       <button
         type="button"
@@ -279,35 +350,65 @@ const OrderSummary = ({
         🛒 &nbsp; Add to Cart
       </button>
 
+
+      {/* =========================
+          NUTRITION
+      ========================= */}
+
       <div className="nutrition-card">
 
         <h3>
           Nutritional Information (Approx.)
         </h3>
 
+
         <div className="nutrition-grid">
 
           <div>
-            <strong>{calories}</strong>
-            <span>kcal</span>
+            <strong>
+              {calories}
+            </strong>
+
+            <span>
+              kcal
+            </span>
           </div>
 
-          <div>
-            <strong>{protein}g</strong>
-            <span>Protein</span>
-          </div>
 
           <div>
-            <strong>{carbs}g</strong>
-            <span>Carbs</span>
+            <strong>
+              {protein}g
+            </strong>
+
+            <span>
+              Protein
+            </span>
           </div>
 
+
           <div>
-            <strong>{fats}g</strong>
-            <span>Fats</span>
+            <strong>
+              {carbs}g
+            </strong>
+
+            <span>
+              Carbs
+            </span>
+          </div>
+
+
+          <div>
+            <strong>
+              {fats}g
+            </strong>
+
+            <span>
+              Fats
+            </span>
           </div>
 
         </div>
+
 
         <p>
           Nutrition values are estimates and may vary.
@@ -316,7 +417,7 @@ const OrderSummary = ({
       </div>
 
     </section>
-  );
-};
+  )
+}
 
-export default OrderSummary;
+export default OrderSummary

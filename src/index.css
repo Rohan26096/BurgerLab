@@ -486,7 +486,7 @@ button:disabled {
 }
 
 .preview-card {
-  background: #f3eee7;
+  background: #ffffff;
   border-radius: 17px;
   min-height: 790px;
   padding: 24px 20px 18px;
@@ -3585,4 +3585,1740 @@ button:disabled {
     font-size: 26px;
   }
 
+}
+
+/* =========================
+   PROFILE MENU
+========================= */
+
+.profile-wrapper {
+  position: relative;
+}
+
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  border: none;
+  border-radius: 9px;
+
+  padding: 10px 13px;
+
+  background: #2d2928;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: opacity 0.2s ease;
+}
+
+
+.profile-button:hover {
+  opacity: 0.88;
+}
+
+
+.profile-name {
+  max-width: 110px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.profile-arrow {
+  font-size: 14px;
+
+  transition: transform 0.2s ease;
+}
+
+
+.profile-menu {
+  position: absolute;
+
+  top: calc(100% + 10px);
+  right: 0;
+
+  width: 230px;
+
+  background: #ffffff;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.12);
+
+  z-index: 1000;
+
+  animation: profileMenuIn 0.15s ease-out;
+}
+
+
+@keyframes profileMenuIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+.profile-menu-header {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding: 16px;
+}
+
+
+.profile-menu-header strong {
+  font-size: 14px;
+
+  color: #171515;
+}
+
+
+.profile-menu-header span {
+  font-size: 12px;
+
+  color: #888888;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.profile-menu-divider {
+  height: 1px;
+
+  background: #eeeeee;
+}
+
+
+.profile-menu>button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 13px 16px;
+
+  border: none;
+
+  background: #ffffff;
+  color: #222222;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: background 0.15s ease;
+}
+
+
+.profile-menu>button:hover {
+  background: #f7f7f7;
+}
+
+
+.profile-menu>button span {
+  width: 20px;
+
+  text-align: center;
+}
+
+
+@media (max-width: 700px) {
+
+  .profile-name {
+    max-width: 70px;
+  }
+
+  .profile-menu {
+    right: -5px;
+  }
+
+}
+
+
+@media (max-width: 550px) {
+
+  .profile-button {
+    padding: 9px 10px;
+  }
+
+  .profile-name {
+    display: none;
+  }
+
+}
+
+.order-details-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+.order-secondary-button {
+  width: 100%;
+
+  padding: 14px 20px;
+
+  border: 1px solid #dedede;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #222222;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.order-secondary-button:hover {
+  background: #f7f7f7;
+}
+
+
+.order-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+
+.reorder-link {
+  color: #d85b1c !important;
+}
+
+
+@media (max-width: 650px) {
+
+  .order-card-actions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+}
+
+/* =========================================
+   BURGER PREVIEW VIEWS
+========================================= */
+
+.burger-stage {
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+/* Burger */
+
+.burger-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  transition:
+    transform 0.45s ease,
+    filter 0.45s ease;
+}
+
+/* Individual layers */
+
+.burger-stack img {
+  display: block;
+  object-fit: contain;
+  transition:
+    transform 0.35s ease,
+    margin 0.35s ease;
+}
+
+.visual-bun {
+  width: 270px;
+  z-index: 10;
+}
+
+.visual-bun.top {
+  margin-bottom: -22px;
+}
+
+.visual-bun.bottom {
+  margin-top: -22px;
+}
+
+.visual-patty {
+  width: 245px;
+  margin-top: -18px;
+  z-index: 5;
+}
+
+.visual-cheese {
+  width: 235px;
+  margin-top: -20px;
+  z-index: 6;
+}
+
+.visual-sauce {
+  width: 225px;
+  margin-top: -18px;
+  z-index: 4;
+}
+
+.visual-lettuce,
+.visual-tomato,
+.visual-onion,
+.visual-pickles,
+.visual-jalapeño,
+.visual-jalapeno,
+.visual-bacon {
+  width: 230px;
+  margin-top: -20px;
+  z-index: 7;
+}
+
+
+/* =========================================
+   FRONT VIEW
+========================================= */
+
+.burger-stage.front .burger-stack {
+  transform: translateY(0) scale(1);
+}
+
+
+/* =========================================
+   SIDE VIEW
+========================================= */
+
+.burger-stage.side .burger-stack {
+  transform:
+    perspective(900px) rotateY(-28deg) scale(0.96);
+}
+
+
+/* =========================================
+   TOP VIEW
+========================================= */
+
+.burger-stage.top .burger-stack {
+  transform:
+    perspective(900px) rotateX(68deg) translateY(45px) scale(0.95);
+}
+
+
+/* =========================================
+   VIEW TABS
+========================================= */
+
+.view-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.view-tabs button {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #555;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-tabs button:hover {
+  border-color: #111;
+  color: #111;
+}
+
+.view-tabs button.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+
+/* =========================================
+   ROTATE HINT
+========================================= */
+
+.rotate-hint {
+  text-align: center;
+  margin-top: 8px;
+  color: #888;
+  font-size: 12px;
+}
+
+/* =========================================
+   SAVED BURGERS
+========================================= */
+
+.saved-burger-bar {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 18px;
+  padding: 16px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #ffffff;
+  border: 1px solid #e7e2dc;
+  border-radius: 14px;
+
+  box-sizing: border-box;
+}
+
+.saved-burger-bar>div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saved-burger-bar strong {
+  font-size: 15px;
+}
+
+.saved-burger-bar span {
+  color: #777;
+  font-size: 12px;
+}
+
+.saved-burgers-button {
+  border: 1px solid #ddd;
+  background: #111;
+  color: #fff;
+
+  padding: 9px 16px;
+  border-radius: 9px;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.saved-burgers-button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+
+/* =========================================
+   SAVED BURGERS SECTION
+========================================= */
+
+.saved-burgers-section {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 22px;
+
+  padding: 24px;
+
+  background: #fff;
+  border: 1px solid #e7e2dc;
+  border-radius: 18px;
+
+  box-sizing: border-box;
+}
+
+.saved-burgers-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.saved-burgers-header h2 {
+  margin: 5px 0 0;
+  font-size: 24px;
+}
+
+.saved-close-button {
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid #ddd;
+  border-radius: 50%;
+
+  background: #fff;
+  cursor: pointer;
+
+  font-size: 15px;
+}
+
+.saved-close-button:hover {
+  background: #f5f5f5;
+}
+
+
+/* =========================================
+   SAVED BURGER GRID
+========================================= */
+
+.saved-burgers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,
+      minmax(280px, 1fr));
+
+  gap: 14px;
+}
+
+.saved-burger-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+
+  background: #fafafa;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.saved-burger-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.saved-card-icon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff2d8;
+  border-radius: 12px;
+
+  font-size: 24px;
+}
+
+.saved-card-content {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saved-card-content strong {
+  font-size: 14px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.saved-card-content span {
+  color: #888;
+  font-size: 11px;
+}
+
+.saved-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.saved-card-actions button {
+  border: none;
+  background: #111;
+  color: #fff;
+
+  padding: 7px 10px;
+  border-radius: 7px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.saved-card-actions button:hover {
+  opacity: 0.85;
+}
+
+.saved-card-actions .saved-delete-button {
+  background: #fff;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.saved-empty {
+  text-align: center;
+  padding: 35px 20px;
+}
+
+.saved-empty>div {
+  font-size: 42px;
+  margin-bottom: 8px;
+}
+
+.saved-empty h3 {
+  margin: 0 0 6px;
+}
+
+.saved-empty p {
+  margin: 0;
+  color: #888;
+  font-size: 13px;
+}
+
+
+/* =========================================
+   SAVE CURRENT BURGER
+========================================= */
+
+.save-current-burger {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 20px auto 40px;
+
+  padding: 18px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: #111;
+  color: #fff;
+
+  border-radius: 16px;
+
+  box-sizing: border-box;
+}
+
+.save-current-burger>div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.save-current-burger strong {
+  font-size: 15px;
+}
+
+.save-current-burger span {
+  color: #bbb;
+  font-size: 12px;
+}
+
+.save-current-burger button {
+  flex-shrink: 0;
+
+  border: none;
+  background: #fff;
+  color: #111;
+
+  padding: 11px 18px;
+  border-radius: 9px;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.save-current-burger button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+
+/* =========================================
+   SAVE BURGER MODAL
+========================================= */
+
+.save-burger-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.save-burger-modal {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 30px;
+
+  background: #fff;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.2);
+
+  box-sizing: border-box;
+}
+
+.save-burger-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+
+  background: #fff2d8;
+  border-radius: 14px;
+
+  font-size: 25px;
+}
+
+.save-burger-modal h2 {
+  margin: 0 0 6px;
+}
+
+.save-burger-modal p {
+  margin: 0 0 20px;
+  color: #777;
+  font-size: 13px;
+}
+
+.save-burger-modal input {
+  width: 100%;
+
+  padding: 13px 14px;
+
+  border: 1px solid #ddd;
+  border-radius: 9px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  box-sizing: border-box;
+}
+
+.save-burger-modal input:focus {
+  border-color: #111;
+}
+
+.save-burger-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.save-cancel-button,
+.save-confirm-button {
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-cancel-button {
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #444;
+}
+
+.save-confirm-button {
+  border: none;
+  background: #111;
+  color: #fff;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .saved-burger-bar {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .saved-burgers-button {
+    padding: 8px 12px;
+  }
+
+  .saved-burger-card {
+    flex-wrap: wrap;
+  }
+
+  .saved-card-actions {
+    width: 100%;
+    margin-left: 58px;
+  }
+
+  .save-current-burger {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .save-current-burger button {
+    width: 100%;
+  }
+
+}
+
+/* =========================================
+   FINAL MOBILE RESPONSIVE POLISH
+========================================= */
+
+@media (max-width: 700px) {
+
+  /* =========================
+       NAVBAR
+    ========================= */
+
+  .navbar {
+    padding: 0 14px;
+    height: 62px;
+  }
+
+  .brand {
+    font-size: 18px;
+    gap: 7px;
+  }
+
+  .brand-icon {
+    font-size: 25px;
+  }
+
+  .navbar-links {
+    gap: 10px;
+  }
+
+  .navbar-links a {
+    font-size: 12px;
+  }
+
+  .nav-actions {
+    gap: 5px;
+  }
+
+  .login-button {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .nav-cart {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+
+  /* =========================
+       PAGE
+    ========================= */
+
+  .page-shell {
+    padding: 14px 12px 25px;
+  }
+
+
+  /* =========================
+       BUILDER
+    ========================= */
+
+  .builder-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .controls-panel,
+  .preview-column,
+  .order-panel {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .controls-panel {
+    padding: 14px;
+  }
+
+  .panel-heading h1 {
+    font-size: 24px;
+  }
+
+  .panel-heading p {
+    font-size: 13px;
+  }
+
+
+  /* =========================
+       INGREDIENT CARDS
+    ========================= */
+
+  .ingredient-card {
+    min-height: 68px;
+    padding: 7px;
+  }
+
+  .round-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 25px;
+  }
+
+  .ingredient-main {
+    gap: 6px;
+    padding: 0 5px;
+  }
+
+  .ingredient-image {
+    width: 50px;
+    height: 48px;
+  }
+
+  .ingredient-image img {
+    width: 54px;
+    height: 46px;
+  }
+
+  .ingredient-copy strong {
+    font-size: 13px;
+  }
+
+  .ingredient-copy span {
+    font-size: 11px;
+  }
+
+
+  /* =========================
+       QUANTITY CONTROL
+    ========================= */
+
+  .quantity-control {
+    gap: 5px;
+  }
+
+  .quantity-control button {
+    width: 29px;
+    height: 29px;
+    font-size: 18px;
+  }
+
+  .quantity-control span {
+    min-width: 10px;
+    font-size: 14px;
+  }
+
+
+  /* =========================
+       TOPPINGS
+    ========================= */
+
+  .topping-heading {
+    padding: 9px 10px;
+  }
+
+  .topping-heading strong {
+    font-size: 13px;
+  }
+
+  .topping-heading span {
+    font-size: 10px;
+  }
+
+  .topping-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+  }
+
+  .topping-card {
+    padding: 7px;
+  }
+
+  .topping-copy strong {
+    font-size: 12px;
+  }
+
+  .topping-copy span {
+    font-size: 10px;
+  }
+
+
+  /* =========================
+       BURGER PREVIEW
+    ========================= */
+
+  .preview-card {
+    min-height: 600px;
+    padding: 18px 12px 15px;
+  }
+
+  .preview-header h2 {
+    font-size: 24px;
+  }
+
+  .preview-header p {
+    font-size: 12px;
+  }
+
+  .custom-pill {
+    padding: 6px 11px;
+    font-size: 11px;
+  }
+
+  .burger-stage {
+    min-height: 440px;
+  }
+
+  .burger-stack {
+    transform: scale(.68);
+    transform-origin: center center;
+  }
+
+  .burger-stage.side .burger-stack {
+    transform:
+      perspective(900px) rotateY(48deg) scale(.62);
+  }
+
+  .burger-stage.top .burger-stack {
+    transform:
+      perspective(900px) rotateX(66deg) scale(.52);
+  }
+
+  .rotate-hint {
+    font-size: 11px;
+  }
+
+  .view-tabs {
+    width: 100%;
+  }
+
+  .view-tabs button {
+    padding: 9px 5px;
+    font-size: 11px;
+  }
+
+
+  /* =========================
+       ORDER SUMMARY
+    ========================= */
+
+  .order-panel {
+    padding: 14px;
+  }
+
+  .order-heading h2 {
+    font-size: 23px;
+  }
+
+  .order-heading button {
+    font-size: 11px;
+  }
+
+  .order-row {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    gap: 7px;
+    min-height: 57px;
+  }
+
+  .order-thumb {
+    width: 38px;
+    height: 38px;
+  }
+
+  .order-thumb img {
+    width: 37px;
+    height: 37px;
+  }
+
+  .order-name span {
+    font-size: 12px;
+  }
+
+  .order-row>strong {
+    font-size: 12px;
+  }
+
+  .total-row {
+    font-size: 21px;
+  }
+
+  .total-row strong {
+    font-size: 23px;
+  }
+
+  .cart-button {
+    padding: 13px;
+    font-size: 14px;
+  }
+
+
+  /* =========================
+       NUTRITION
+    ========================= */
+
+  .nutrition-card {
+    padding: 12px;
+  }
+
+  .nutrition-card h3 {
+    font-size: 13px;
+  }
+
+  .nutrition-grid strong {
+    font-size: 16px;
+  }
+
+  .nutrition-grid span {
+    font-size: 9px;
+  }
+
+
+  /* =========================
+       ABOUT
+    ========================= */
+
+  .about-section {
+    margin-top: 40px;
+    padding: 40px 20px;
+  }
+
+  .about-text h2 {
+    font-size: 29px;
+  }
+
+  .about-question {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .about-question strong {
+    min-width: 0;
+    font-size: 14px;
+  }
+
+  .about-question span {
+    font-size: 13px;
+  }
+
+
+  /* =========================
+       SAVED BURGERS
+    ========================= */
+
+  .saved-burger-bar {
+    padding: 13px 14px;
+  }
+
+  .saved-burger-bar strong {
+    font-size: 13px;
+  }
+
+  .saved-burger-bar span {
+    font-size: 10px;
+  }
+
+  .saved-burgers-button {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .saved-burgers-section {
+    padding: 16px;
+  }
+
+  .saved-burgers-header h2 {
+    font-size: 21px;
+  }
+
+  .saved-burgers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-burger-card {
+    padding: 11px;
+  }
+
+  .saved-card-actions {
+    gap: 5px;
+  }
+
+
+  /* =========================
+       SAVE BURGER
+    ========================= */
+
+  .save-current-burger {
+    margin: 16px auto 30px;
+    padding: 15px;
+  }
+
+  .save-current-burger strong {
+    font-size: 13px;
+  }
+
+  .save-current-burger span {
+    font-size: 10px;
+  }
+
+  .save-current-burger button {
+    width: 100%;
+    padding: 11px;
+  }
+}
+
+
+/* =========================================
+   EXTRA SMALL PHONES
+========================================= */
+
+@media (max-width: 400px) {
+
+  .navbar-links {
+    gap: 6px;
+  }
+
+  .navbar-links a {
+    font-size: 11px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .brand-icon {
+    font-size: 22px;
+  }
+
+  .login-button {
+    padding: 8px 10px;
+  }
+
+  .ingredient-card {
+    padding: 6px;
+  }
+
+  .round-arrow {
+    width: 29px;
+    height: 29px;
+  }
+
+  .ingredient-main {
+    padding: 0 2px;
+  }
+
+  .ingredient-image {
+    width: 43px;
+  }
+
+  .ingredient-image img {
+    width: 47px;
+  }
+
+  .quantity-control button {
+    width: 27px;
+    height: 27px;
+  }
+
+  .topping-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-card {
+    min-height: 550px;
+  }
+
+  .burger-stage {
+    min-height: 400px;
+  }
+
+  .burger-stack {
+    transform: scale(.57);
+  }
+
+  .burger-stage.side .burger-stack {
+    transform:
+      perspective(900px) rotateY(48deg) scale(.52);
+  }
+
+  .burger-stage.top .burger-stack {
+    transform:
+      perspective(900px) rotateX(66deg) scale(.44);
+  }
+
+  .view-tabs button {
+    font-size: 10px;
+    padding: 8px 3px;
+  }
+
+  .nutrition-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nutrition-grid div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .nutrition-grid div:nth-child(-n + 2) {
+    border-bottom: 1px solid #e6e2dd;
+  }
+
+  .about-text h2 {
+    font-size: 26px;
+  }
+}
+
+/* =========================================================
+   BURGERLAB - BUILDER ANIMATIONS
+========================================================= */
+
+/* Smooth burger view changes */
+.burger-stack {
+  transition:
+    transform 0.55s cubic-bezier(.22, 1, .36, 1),
+    filter 0.35s ease;
+  will-change: transform;
+}
+
+/* Newly added burger ingredients */
+.visual-bun,
+.visual-sauce,
+.visual-lettuce,
+.visual-tomato,
+.visual-onion,
+.visual-pickles,
+.visual-jalapeño,
+.visual-bacon,
+.visual-cheese,
+.visual-patty {
+  animation: ingredientDropIn 0.4s cubic-bezier(.22, 1, .36, 1);
+  transform-origin: center;
+}
+
+/* Ingredient entrance */
+@keyframes ingredientDropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) scale(.92);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(4px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================================
+   INGREDIENT CARDS
+========================================================= */
+
+.ingredient-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ingredient-card:hover {
+  transform: translateY(-2px);
+  border-color: #d8d2ca;
+  box-shadow: 0 5px 14px rgba(54, 39, 25, .07);
+}
+
+
+/* =========================================================
+   ARROW BUTTONS
+========================================================= */
+
+.round-arrow {
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
+}
+
+.round-arrow:hover {
+  transform: scale(1.08);
+}
+
+.round-arrow:active {
+  transform: scale(.92);
+}
+
+
+/* =========================================================
+   QUANTITY BUTTONS
+========================================================= */
+
+.quantity-control button {
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.quantity-control button:hover:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.quantity-control button:active:not(:disabled) {
+  transform: scale(.88);
+}
+
+
+/* Quantity number gets a tiny emphasis */
+.quantity-control span {
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+
+
+/* =========================================================
+   TOPPING CARDS
+========================================================= */
+
+.topping-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.topping-card:hover {
+  transform: translateY(-2px);
+  border-color: #d8d2ca;
+  box-shadow: 0 4px 12px rgba(54, 39, 25, .06);
+}
+
+
+/* =========================================================
+   VIEW TABS
+========================================================= */
+
+.view-tabs {
+  box-shadow: 0 3px 12px rgba(54, 39, 25, .04);
+}
+
+.view-tabs button {
+  transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    transform 0.18s ease;
+}
+
+.view-tabs button:hover {
+  transform: translateY(-1px);
+}
+
+.view-tabs button:active {
+  transform: scale(.97);
+}
+
+
+/* =========================================================
+   ADD TO CART
+========================================================= */
+
+.cart-button {
+  transition:
+    transform 0.18s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cart-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(255, 184, 46, .22);
+}
+
+.cart-button:active {
+  transform: translateY(1px) scale(.98);
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   RESET BUTTON
+========================================================= */
+
+.reset-button {
+  transition:
+    background 0.2s ease,
+    transform 0.18s ease,
+    border-color 0.2s ease;
+}
+
+.reset-button:hover {
+  background: #efede9;
+  border-color: #d8d3cd;
+  transform: translateY(-1px);
+}
+
+.reset-button:active {
+  transform: scale(.98);
+}
+
+
+/* =========================================================
+   PREVIEW NOTE
+========================================================= */
+
+.preview-note {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.preview-note:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(54, 39, 25, .06);
+}
+
+
+/* =========================================================
+   CUSTOM PILL
+========================================================= */
+
+.custom-pill {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.custom-pill:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(54, 39, 25, .07);
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+
+/* Burger assembly: clean, seamless appearance */
+.burger-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: #fff;
+  overflow: visible;
+}
+
+/* Remove rectangular card effects from ingredient images */
+.burger-stack img {
+  display: block;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  mix-blend-mode: multiply;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Top bun */
+.burger-stack img.visual-bun.top {
+  margin-bottom: -20px;
+  position: relative;
+  z-index: 5;
+}
+
+/* Toppings overlap instead of floating apart */
+.burger-stack img.visual-lettuce,
+.burger-stack img.visual-tomato,
+.burger-stack img.visual-onion,
+.burger-stack img.visual-pickles,
+.burger-stack img.visual-jalapeño,
+.burger-stack img.visual-cheese,
+.burger-stack img.visual-bacon,
+.burger-stack img.visual-sauce {
+  margin-top: -12px;
+  margin-bottom: -8px;
+  position: relative;
+  z-index: 4;
+}
+
+/* Patty */
+.burger-stack img.visual-patty {
+  margin-top: -10px;
+  margin-bottom: -15px;
+  position: relative;
+  z-index: 3;
+}
+
+/* Bottom bun */
+.burger-stack img.visual-bun.bottom {
+  margin-top: -5px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep the preview area clean and white */
+.burger-stage,
+.preview-card {
+  background-color: #fff;
+}
+
+/* Burger stack: separate, clearly visible ingredients */
+.burger-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+}
+
+/* Keep each ingredient image separate */
+.burger-stack img {
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  mix-blend-mode: multiply;
+  margin: 0;
+  position: static;
+}
+
+/* No overlapping between any burger layers */
+.burger-stack img.visual-bun.top,
+.burger-stack img.visual-bun.bottom,
+.burger-stack img.visual-lettuce,
+.burger-stack img.visual-tomato,
+.burger-stack img.visual-onion,
+.burger-stack img.visual-pickles,
+.burger-stack img.visual-jalapeño,
+.burger-stack img.visual-cheese,
+.burger-stack img.visual-patty,
+.burger-stack img.visual-bacon,
+.burger-stack img.visual-sauce {
+  margin: 0;
+  position: static;
+}
+
+/* White background behind the assembled burger */
+.burger-stage,
+.preview-card {
+  background-color: #fff;
+}
+
+/* Keep top and bottom buns the same size */
+.burger-stack img.visual-bun.top,
+.burger-stack img.visual-bun.bottom {
+  width: 400px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Preserve the current spacing between all ingredients */
+
+
+.burger-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  /* reduced from 8px */
+}
+
+/* Keep both buns the same size */
+.burger-stack img.visual-bun.top,
+.burger-stack img.visual-bun.bottom {
+  width: 400px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0;
+  flex-shrink: 0;
 }

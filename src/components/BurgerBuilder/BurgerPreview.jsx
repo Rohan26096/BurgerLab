@@ -57,8 +57,10 @@ const BurgerPreview = ({ burger }) => {
           </div>
         </div>
 
-        <div className="rotate-hint">⟳ &nbsp; Drag to rotate</div>
-
+        <div className="rotate-hint">
+          ⟳ &nbsp; Use the views below to explore your burger
+        </div>
+        
         <div className="view-tabs">
           {[['front', 'Front View'], ['side', 'Side View'], ['top', 'Top View']].map(([key, label]) => (
             <button key={key} type="button" className={view === key ? 'active' : ''} onClick={() => setView(key)}>{label}</button>

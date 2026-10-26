@@ -189,6 +189,14 @@ function App() {
   // OPEN CHECKOUT
   const openCheckout = () => {
 
+    if (!currentUser) {
+
+      setIsCartOpen(false)
+      setShowLogin(true)
+
+      return
+    }
+
     setIsCartOpen(false)
     setShowCheckout(true)
 
@@ -224,9 +232,10 @@ function App() {
   // BACK TO BUILDER
   const backToBuilder = () => {
 
-    setShowOrders(false)
-    setShowCheckout(false)
-    setSuccessOrder(null)
+      setShowOrders(false)
+      setShowCheckout(false)
+      setSuccessOrder(null)
+      setReorderBurger(null)
 
   }
 
@@ -319,189 +328,25 @@ function App() {
   // REORDER
   const handleReorder = (order) => {
 
-    if (order.burgers?.[0]) {
+    if (!order?.burgers?.[0]) {
 
-      const burgerToReorder =
-        order.burgers[0]
+      alert("This order cannot be reordered.")
 
-      setReorderBurger({
-        ...burgerToReorder,
-        toppings: {
-          ...burgerToReorder.toppings,
-        },
-      })
-
-    } else {
-
-      const rows = order.rows || []
-
-
-      const burgerToReorder = {
-
-        bunIndex: 0,
-
-        bottomBunIndex: 0,
-
-        pattyIndex: 0,
-        pattyQuantity: 0,
-
-        cheeseIndex: 0,
-        cheeseQuantity: 0,
-
-        onionTypeIndex: 0,
-
-        sauceIndex: 0,
-        sauceQuantity: 0,
-
-        toppings: {
-          Lettuce: 0,
-          Tomato: 0,
-          Onion: 0,
-          Pickles: 0,
-          Jalapeño: 0,
-          Bacon: 0,
-        },
-
-      }
-
-
-      rows.forEach((item) => {
-
-        const name = item.name
-          .replace(" (Top)", "")
-          .replace(" (Bottom)", "")
-
-
-        if (item.name.includes("(Top)")) {
-
-          const bunNames = [
-            "Sesame Bun",
-            "Brioche Bun",
-            "Whole Wheat Bun",
-            "Potato Bun",
-          ]
-
-          const index =
-            bunNames.indexOf(name)
-
-          if (index !== -1) {
-            burgerToReorder.bunIndex = index
-          }
-
-        }
-
-
-        else if (
-          item.name.includes("(Bottom)")
-        ) {
-
-          const bottomBunNames = [
-            "Classic Bun",
-            "Brioche Bun",
-            "Whole Wheat Bun",
-            "Potato Bun",
-          ]
-
-          const index =
-            bottomBunNames.indexOf(name)
-
-          if (index !== -1) {
-            burgerToReorder.bottomBunIndex =
-              index
-          }
-
-        }
-
-
-        else if (
-          name === "Beef Patty" ||
-          name === "Grilled Chicken Patty" ||
-          name === "Veggie Patty" ||
-          name === "Crispy Chicken Patty"
-        ) {
-
-          const pattyNames = [
-            "Beef Patty",
-            "Grilled Chicken Patty",
-            "Veggie Patty",
-            "Crispy Chicken Patty",
-          ]
-
-          burgerToReorder.pattyIndex =
-            pattyNames.indexOf(name)
-
-          burgerToReorder.pattyQuantity =
-            item.quantity || 1
-
-        }
-
-
-        else if (
-          name === "Cheddar Cheese" ||
-          name === "American Cheese" ||
-          name === "Swiss Cheese" ||
-          name === "Pepper Jack"
-        ) {
-
-          const cheeseNames = [
-            "Cheddar Cheese",
-            "American Cheese",
-            "Swiss Cheese",
-            "Pepper Jack",
-          ]
-
-          burgerToReorder.cheeseIndex =
-            cheeseNames.indexOf(name)
-
-          burgerToReorder.cheeseQuantity =
-            item.quantity || 1
-
-        }
-
-
-        else if (
-          name === "BBQ Sauce" ||
-          name === "Ketchup" ||
-          name === "Mayonnaise" ||
-          name === "Mustard" ||
-          name === "Chipotle Mayo"
-        ) {
-
-          const sauceNames = [
-            "BBQ Sauce",
-            "Ketchup",
-            "Mayonnaise",
-            "Mustard",
-            "Chipotle Mayo",
-          ]
-
-          burgerToReorder.sauceIndex =
-            sauceNames.indexOf(name)
-
-          burgerToReorder.sauceQuantity =
-            item.quantity || 1
-
-        }
-
-
-        else if (
-          Object.prototype.hasOwnProperty.call(
-            burgerToReorder.toppings,
-            name
-          )
-        ) {
-
-          burgerToReorder.toppings[name] =
-            item.quantity || 1
-
-        }
-
-      })
-
-
-      setReorderBurger(burgerToReorder)
-
+      return
     }
+
+
+    const burgerToReorder = order.burgers[0]
+
+
+    setReorderBurger({
+      ...burgerToReorder,
+
+      toppings: {
+        ...burgerToReorder.toppings,
+      },
+
+    })
 
 
     setShowOrders(false)
@@ -537,6 +382,12 @@ function App() {
     )
 
     setCurrentUser(null)
+
+    setShowOrders(false)
+    setShowCheckout(false)
+    setSuccessOrder(null)
+    setReorderBurger(null)
+    setIsCartOpen(false)
 
   }
 
